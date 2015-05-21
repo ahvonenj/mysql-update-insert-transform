@@ -6,51 +6,14 @@ function MysqlTransformer()
 //Update query to insert query transform
 MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, onerrorcallback)
 {
-    var transformed = 'UPDATE '; //Returned, transformed query
-
-    //Parse needed indexes from the query
-    var insertStmtIdx = 11;
-    var columnListIdx = sql.indexOf('(');
-    var columnListLastIdx = sql.indexOf(')');
-    var valuesStmtIdx = sql.indexOf('VALUES') + 6;
-    var valueListIdx = sql.indexOf('(', valuesStmtIdx);
-    var valueListLastIdx = sql.indexOf(')', valuesStmtIdx);
-
-    //Parse needed information for transform out of the query
-    var tableName = this.rt(sql.substring(insertStmtIdx, columnListIdx));
-    var columnList = this.columnListStringToArray(this.rt(sql.substring(columnListIdx - 1, columnListLastIdx + 1)));
-    var valueList = this.valueListStringToArray(this.rt(sql.substring(valueListIdx - 1, valueListLastIdx + 1)));
-
-    //Check that column and value counts match
-    if (columnList.length !== valueList.length)
+    if (typeof sql === 'undefined' || sql.length < 20)
     {
         if (typeof onerrorcallback !== 'undefined')
-            onerrorcallback('Column and value count does not match');
+            onerrorcallback('Update query cannot possibly be this short');
 
         return;
     }
 
-    //Make the transform string
-    transformed += tableName + '\nSET\n';
-
-    for (var i = 0; i < columnList.length; i++)
-    {
-        var column = columnList[i];
-        var value = valueList[i];
-        var comma = (i == columnList.length - 1) ? '' : ',';
-
-        transformed += '`' + column + '` = ' + value + comma + '\n';
-    }
-
-    transformed += 'WHERE `someid` = :somevalue;';
-
-    //Output transformed query
-    $(outputselector).val(transformed);
-};
-
-//Insert query to update query transform
-MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, onerrorcallback)
-{
     var transformed = 'INSERT INTO '; //Returned, transformed query first part
     var transformed_values = 'VALUES\n('; //Returned, transformed query last part
 
@@ -94,6 +57,59 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, onerr
     }
 
     transformed += ')\n' + transformed_values + ');';
+
+    //Output transformed query
+    $(outputselector).val(transformed);
+};
+
+//Insert query to update query transform
+MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, onerrorcallback)
+{
+    if (typeof sql === 'undefined' || sql.length < 20)
+    {
+        if (typeof onerrorcallback !== 'undefined')
+            onerrorcallback('Insert query cannot possibly be this short');
+
+        return;
+    }
+
+    var transformed = 'UPDATE '; //Returned, transformed query
+
+    //Parse needed indexes from the query
+    var insertStmtIdx = 11;
+    var columnListIdx = sql.indexOf('(');
+    var columnListLastIdx = sql.indexOf(')');
+    var valuesStmtIdx = sql.indexOf('VALUES') + 6;
+    var valueListIdx = sql.indexOf('(', valuesStmtIdx);
+    var valueListLastIdx = sql.indexOf(')', valuesStmtIdx);
+
+    //Parse needed information for transform out of the query
+    var tableName = this.rt(sql.substring(insertStmtIdx, columnListIdx));
+    var columnList = this.columnListStringToArray(this.rt(sql.substring(columnListIdx - 1, columnListLastIdx + 1)));
+    var valueList = this.valueListStringToArray(this.rt(sql.substring(valueListIdx - 1, valueListLastIdx + 1)));
+
+    //Check that column and value counts match
+    if (columnList.length !== valueList.length)
+    {
+        if (typeof onerrorcallback !== 'undefined')
+            onerrorcallback('Column and value count does not match');
+
+        return;
+    }
+
+    //Make the transform string
+    transformed += tableName + '\nSET\n';
+
+    for (var i = 0; i < columnList.length; i++)
+    {
+        var column = columnList[i];
+        var value = valueList[i];
+        var comma = (i == columnList.length - 1) ? '' : ',';
+
+        transformed += '`' + column + '` = ' + value + comma + '\n';
+    }
+
+    transformed += 'WHERE `someid` = :somevalue;';
 
     //Output transformed query
     $(outputselector).val(transformed);

@@ -140,8 +140,8 @@ MysqlTransformer.prototype.rt = function (str)
 //"Hack" to convert a column list in a string form into a JavaScript array
 MysqlTransformer.prototype.columnListStringToArray = function (str)
 {
-    str = str.replace("(", "[").replace(")", "]").replace(/\`/g, "\'");
-    var returnarray = eval(str); //Eval array looking string into an actual array :)
+    var returnarray = str.replace("(", "").replace(")", "").replace(/\`/g, "").replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, "").split(',');
+    console.log(returnarray);
     return returnarray;
 };
 

@@ -141,7 +141,6 @@ MysqlTransformer.prototype.rt = function (str)
 MysqlTransformer.prototype.columnListStringToArray = function (str)
 {
     var returnarray = str.replace("(", "").replace(")", "").replace(/\`/g, "").replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, "").split(',');
-    console.log(returnarray);
     return returnarray;
 };
 

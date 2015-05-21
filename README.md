@@ -18,3 +18,28 @@ The tool can be found online, here: [click](http://ahvonenj.github.io/mysql-upda
 ![](https://github.com/ahvonenj/mysql-update-insert-transform/blob/master/example_image.PNG?raw=true)
 
 ![](https://github.com/ahvonenj/mysql-update-insert-transform/blob/master/example_image_2.PNG?raw=true)
+
+# Example queries
+
+## Insert
+
+```INSERT INTO `somedb`.`sometable`
+			(`somecolumnA`, `somecolumnB`, `somecolumnC`, `somecolumnD`, `somecolumnE`, `somecolumnF`, `somecolumnG`,
+			`somecolumnH`)
+			VALUES
+			(:somesubstitutionA, :somesubstitutionB, :somesubstitutionC, :somesubstitutionD, :somesubstitutionE, :somesubstitutionF, :somesubstitutionG,
+			:somesubstitutionH)```
+
+## Update
+
+```UPDATE `somedb`.`sometable`
+SET
+`somecolumnA` = :somesubstitutionA,
+`somecolumnB` = :somesubstitutionB,
+`somecolumnC` = :somesubstitutionC,
+`somecolumnD` = :somesubstitutionD,
+`somecolumnE` = :somesubstitutionE,
+`somecolumnF` = :somesubstitutionF,
+`somecolumnG` = :somesubstitutionG,
+`somecolumnH` = :somesubstitutionH
+WHERE `someid` = :somevalue;```

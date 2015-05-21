@@ -14,7 +14,7 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, onerr
         return;
     }
 
-    if (!this.isValidUpdate())
+    if (!this.isValidUpdate(sql))
     {
         if (typeof onerrorcallback !== 'undefined')
             onerrorcallback('Update query does not seem to be valid');
@@ -81,7 +81,7 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, onerr
         return;
     }
 
-    if (!this.isValidInsert())
+    if (!this.isValidInsert(sql))
     {
         if (typeof onerrorcallback !== 'undefined')
             onerrorcallback('Insert query does not seem to be valid');

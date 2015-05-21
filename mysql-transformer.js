@@ -14,6 +14,14 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, onerr
         return;
     }
 
+    if (!this.isValidUpdate(sql))
+    {
+        if (typeof onerrorcallback !== 'undefined')
+            onerrorcallback('Update query does not seem to be valid');
+
+        return;
+    }
+
     var transformed = 'INSERT INTO '; //Returned, transformed query first part
     var transformed_values = 'VALUES\n('; //Returned, transformed query last part
 
@@ -32,7 +40,7 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, onerr
     if (splitSetlist.columns.length !== splitSetlist.values.length)
     {
         if (typeof onerrorcallback !== 'undefined')
-            onerrorcallback('Column and value count does not match');
+            onerrorcallback('Column and value count does not match or the query is badly structured');
 
         return;
     }
@@ -73,6 +81,14 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, onerr
         return;
     }
 
+    if (!this.isValidInsert(sql))
+    {
+        if (typeof onerrorcallback !== 'undefined')
+            onerrorcallback('Insert query does not seem to be valid');
+
+        return;
+    }
+
     var transformed = 'UPDATE '; //Returned, transformed query
 
     //Parse needed indexes from the query
@@ -92,7 +108,7 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, onerr
     if (columnList.length !== valueList.length)
     {
         if (typeof onerrorcallback !== 'undefined')
-            onerrorcallback('Column and value count does not match');
+            onerrorcallback('Column and value count does not match or the query is badly structured');
 
         return;
     }
@@ -184,4 +200,33 @@ MysqlTransformer.prototype.splitSetlist = function (setlist)
     }
 
     return lists;
+};
+
+//Check if the given querystring is somewhat valid insert query
+MysqlTransformer.prototype.isValidInsert = function (querystring)
+{
+    if (querystring.indexOf('INSERT INTO') > -1 &&
+        querystring.indexOf('VALUES') > -1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+};
+
+//Check if the given querystring is somewhat valid update query
+MysqlTransformer.prototype.isValidUpdate = function (querystring)
+{
+    if (querystring.indexOf('UPDATE') > -1 &&
+        querystring.indexOf('SET') > -1 &&
+        querystring.indexOf('WHERE') > -1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 };

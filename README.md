@@ -9,6 +9,10 @@ The tool is also supposed to produce exactly what MySQL Workbench would produce.
 
 NOTE: You should probably be using '[UPSERT](http://stackoverflow.com/questions/1218905/how-do-i-update-if-exists-insert-if-not-aka-upsert-or-merge-in-mysql)' pattern to begin with than to write separate insert and update statements, but in case you have to write them separately for some reason, this tool will help.
 
+# Tool online
+
+The tool can be found online, here: [click](http://ahvonenj.github.io/mysql-update-insert-transform/)
+
 # Examples
 
 ![](https://github.com/ahvonenj/mysql-update-insert-transform/blob/master/example_image.PNG?raw=true)

@@ -3,7 +3,7 @@ function MysqlTransformer()
 
 }
 
-MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector)
+MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, onerrorcallback)
 {
     var transformed = 'UPDATE ';
 
@@ -17,6 +17,14 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector)
     var tableName = this.rt(sql.substring(insertStmtIdx, columnListIdx));
     var columnList = this.columnListStringToArray(this.rt(sql.substring(columnListIdx - 1, columnListLastIdx + 1)));
     var valueList = this.valueListStringToArray(this.rt(sql.substring(valueListIdx - 1, valueListLastIdx + 1)));
+
+    if (columnList.length !== valueList.length)
+    {
+        if (typeof onerrorcallback !== 'undefined')
+            onerrorcallback('Column and value count does not match');
+
+        return;
+    }
 
     transformed += tableName + '\nSET\n';
 
@@ -34,7 +42,7 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector)
     $(outputselector).val(transformed);
 };
 
-MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector)
+MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, onerrorcallback)
 {
     var transformed = 'INSERT INTO ';
     var transformed_values = 'VALUES\n(';
@@ -44,15 +52,25 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector)
     var whereStmtIdx = sql.indexOf('WHERE');
 
     var tableName = this.rt(sql.substring(updateStmtIdx, setStmtIdx));
-    var setList = this.setListStringToArray(this.rt(sql.substring(setStmtIdx + 3, whereStmtIdx)));
+    var setlist = this.setlistStringToArray(this.rt(sql.substring(setStmtIdx + 3, whereStmtIdx)));
+
+    var splitSetlist = this.splitSetlist(setlist);
+
+    if (splitSetlist.columns.length !== splitSetlist.values.length)
+    {
+        if (typeof onerrorcallback !== 'undefined')
+            onerrorcallback('Column and value count does not match');
+
+        return;
+    }
 
     transformed += tableName + '\n(';
 
-    for (var i = 0; i < setList.length; i++)
+    for (var i = 0; i < setlist.length; i++)
     {
-        var columnorvalue = setList[i];
-        var comma = (i == setList.length - 2 || i == setList.length - 1) ? '' : ',';
-        var lb = (i == setList.length - 2 || i == setList.length - 1) ? '' : '\n';
+        var columnorvalue = setlist[i];
+        var comma = (i == setlist.length - 2 || i == setlist.length - 1) ? '' : ',';
+        var lb = (i == setlist.length - 2 || i == setlist.length - 1) ? '' : '\n';
 
         if (i == 0 || i % 2 == 0)
         {
@@ -90,7 +108,7 @@ MysqlTransformer.prototype.valueListStringToArray = function (str)
 };
 
 //Hack to convert a set list in a string form into a JavaScript array
-MysqlTransformer.prototype.setListStringToArray = function (str)
+MysqlTransformer.prototype.setlistStringToArray = function (str)
 {
     var returnarray = str.replace(/,/g, "=").replace(/\`/g, "").replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, "").split('=');
 
@@ -109,4 +127,26 @@ MysqlTransformer.prototype.setListStringToArray = function (str)
 MysqlTransformer.prototype.isNumeric = function (somevar)
 {
     return !isNaN(somevar);
+};
+
+MysqlTransformer.prototype.splitSetlist = function (setlist)
+{
+    var lists = {
+        columns: [],
+        values: []
+    };
+
+    for (var i = 0; i < setlist.length; i++)
+    {
+        if (i == 0 || i % 2 == 0)
+        {
+            lists.columns.push(setlist[i]);
+        }
+        else
+        {
+            lists.values.push(setlist[i]);
+        }
+    }
+
+    return lists;
 };

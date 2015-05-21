@@ -40,7 +40,7 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, onerr
     if (splitSetlist.columns.length !== splitSetlist.values.length)
     {
         if (typeof onerrorcallback !== 'undefined')
-            onerrorcallback('Column and value count does not match');
+            onerrorcallback('Column and value count does not match or the query is badly structured');
 
         return;
     }
@@ -108,7 +108,7 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, onerr
     if (columnList.length !== valueList.length)
     {
         if (typeof onerrorcallback !== 'undefined')
-            onerrorcallback('Column and value count does not match');
+            onerrorcallback('Column and value count does not match or the query is badly structured');
 
         return;
     }

@@ -14,6 +14,14 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, onerr
         return;
     }
 
+    if (!this.isValidUpdate())
+    {
+        if (typeof onerrorcallback !== 'undefined')
+            onerrorcallback('Update query does not seem to be valid');
+
+        return;
+    }
+
     var transformed = 'INSERT INTO '; //Returned, transformed query first part
     var transformed_values = 'VALUES\n('; //Returned, transformed query last part
 
@@ -69,6 +77,14 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, onerr
     {
         if (typeof onerrorcallback !== 'undefined')
             onerrorcallback('Insert query cannot possibly be this short');
+
+        return;
+    }
+
+    if (!this.isValidInsert())
+    {
+        if (typeof onerrorcallback !== 'undefined')
+            onerrorcallback('Insert query does not seem to be valid');
 
         return;
     }
@@ -184,4 +200,33 @@ MysqlTransformer.prototype.splitSetlist = function (setlist)
     }
 
     return lists;
+};
+
+//Check if the given querystring is somewhat valid insert query
+MysqlTransformer.prototype.isValidInsert = function (querystring)
+{
+    if (querystring.indexOf('INSERT INTO') > -1 &&
+        querystring.indexOf('VALUES') > -1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+};
+
+//Check if the given querystring is somewhat valid update query
+MysqlTransformer.prototype.isValidUpdate = function (querystring)
+{
+    if (querystring.indexOf('UPDATE') > -1 &&
+        querystring.indexOf('SET') > -1 &&
+        querystring.indexOf('WHERE') > -1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 };

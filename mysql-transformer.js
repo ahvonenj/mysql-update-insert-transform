@@ -50,6 +50,7 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxo
 	var ajaxdatastring = '';
 	var issetstring = 'if(isset(';
 	var bindstring = '';
+	var bindstring2 = '';
 	var parameterstring = 'function someFunction(';
 	var functionstring = '';
 	
@@ -87,7 +88,8 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxo
 		
 		ajaxdatastring += '\t\t' + column + ': ' + value + '' + comma + '\n';
 		issetstring += '$_' + requesttype + '["' + column + '"]' + comma2;
-		bindstring += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", <value>);' + lb;
+		bindstring += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", $' + column.replace(/'|`|"/g, '') + ');' + lb;
+		bindstring2 += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", $_' + requesttype + '["' + column.replace(/'|`|"/g, '') + '"]);' + lb;
 		parameterstring += '$' + column + comma2;
 	}
 	
@@ -96,7 +98,7 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxo
 	issetstring += '))\n{\n\t\n}';
 	parameterstring += ')\n{\n\t\n}';
 	
-	functionstring += issetstring + '\n\n\n' + bindstring + '\n\n\n' + parameterstring;
+	functionstring += issetstring + '\n\n\n' + bindstring + '\n\n\n' + bindstring2 + '\n\n\n' + parameterstring;
 
     //Output transformed query
     $(outputselector).val(transformed);
@@ -152,6 +154,7 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxo
 	var ajaxdatastring = '';
 	var issetstring = 'if(isset(';
 	var bindstring = '';
+	var bindstring2 = '';
 	var parameterstring = 'function someFunction(';
 	var functionstring = '';
 	
@@ -171,7 +174,8 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxo
         transformed += '`' + column + '` = :' + value + comma + '\n';
 		ajaxdatastring += '\t\t' + column + ': ' + value + '' + comma + '\n';
 		issetstring += '$_' + requesttype + '["' + column + '"]' + comma2;
-		bindstring += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", <value>);' + lb;
+		bindstring += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", $' + column.replace(/'|`|"/g, '') + ');' + lb;
+		bindstring2 += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", $_' + requesttype + '["' + column.replace(/'|`|"/g, '') + '"]);' + lb;
 		parameterstring += '$' + column + comma2;
     }
 
@@ -182,7 +186,7 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxo
 	issetstring += '))\n{\n\t\n}';
 	parameterstring += ')\n{\n\t\n}';
 	
-	functionstring += issetstring + '\n\n\n' + bindstring + '\n\n\n' + parameterstring;
+	functionstring += issetstring + '\n\n\n' + bindstring + '\n\n\n' + bindstring2 + '\n\n\n' + parameterstring;
 
     //Output transformed query
     $(outputselector).val(transformed);
@@ -220,6 +224,7 @@ MysqlTransformer.prototype.AjaxToSQL = function (ajaxstring, outputselector1, ou
 	var updateTransform = 'UPDATE ' + tableName + '\nSET\n';
 	var issetstring = 'if(isset(';
 	var bindstring = '';
+	var bindstring2 = '';
 	var parameterstring = 'function someFunction(';
 	var functionstring = '';
 	
@@ -242,7 +247,8 @@ MysqlTransformer.prototype.AjaxToSQL = function (ajaxstring, outputselector1, ou
 				updateTransform += '`' + key + '` = :' + value + comma + '\n';
 				
 				issetstring += '$_' + requesttype + '["' + key + '"]' + comma2;
-				bindstring += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", <value>);' + lb;
+				bindstring += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", $' + column.replace(/'|`|"/g, '') + ');' + lb;
+				bindstring2 += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", $_' + requesttype + '["' + key.replace(/'|`|"/g, '') + '"]);' + lb;
 				parameterstring += '$' + key + comma2;
 			}
 			
@@ -252,7 +258,7 @@ MysqlTransformer.prototype.AjaxToSQL = function (ajaxstring, outputselector1, ou
 			issetstring += '))\n{\n\t\n}';
 			parameterstring += ')\n{\n\t\n}';
 			
-			functionstring += issetstring + '\n\n\n' + bindstring + '\n\n\n' + parameterstring;
+			functionstring += issetstring + '\n\n\n' + bindstring + '\n\n\n' + bindstring2 + '\n\n\n' + parameterstring;
 			
 			$(outputselector1).val(updateTransform);
 			$(outputselector2).val(insertTransform);
@@ -336,7 +342,7 @@ MysqlTransformer.prototype.ajaxToJSON = function(ajaxstr)
 		{
 			var firstIdx = stripped[i].indexOf(':');
 			var first = stripped[i].substring(0, firstIdx);
-			var rest = stripped[i].substr(firstIdx + 1);
+			var rest = stripped[i].substr(firstIdx + 1).replace(/:/g, "");
 			var glued = first + ':' + rest;
 			
 			console.log(first, rest, glued);

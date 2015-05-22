@@ -7,6 +7,8 @@ With this tool you only need to write either insert or an update statement and t
 
 The tool is also supposed to produce exactly what MySQL Workbench would produce... well some spaces are missing after transformation, otherwise it is 95% similar to the MySQL Workbench output.
 
+The tool is not too strict about syntax, but might break in some cases. The more correct the syntax the better the app will work.
+
 NOTE: You should probably be using '[UPSERT](http://stackoverflow.com/questions/1218905/how-do-i-update-if-exists-insert-if-not-aka-upsert-or-merge-in-mysql)' pattern to begin with than to write separate insert and update statements, but in case you have to write them separately for some reason, this tool will help.
 
 # Tool online
@@ -18,7 +20,7 @@ The tool can be found online, here: [click](http://ahvonenj.github.io/mysql-upda
 - Implemented a shareable link generation
 - Implemented SQL to ajax transform
 - Implemented ajax to SQL transform
-- Fixed some edge cases with queries and ajax 
+- Fixed some edge cases with queries and ajax that broke the app
 
 # Examples
 

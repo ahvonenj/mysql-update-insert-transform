@@ -69,7 +69,7 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxo
         else
         {
 			columnorvalue = (columnorvalue.length > 0) ? columnorvalue : null;
-            transformed_values += columnorvalue + comma + lb;
+            transformed_values += ':' + columnorvalue + comma + lb;
         }
     }
 
@@ -87,7 +87,7 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxo
 		
 		ajaxdatastring += '\t\t' + column + ': ' + value + '' + comma + '\n';
 		issetstring += '$_' + requesttype + '["' + column + '"]' + comma2;
-		bindstring += '$query->bindValue("' + column + '", ' + value + ');' + lb;
+		bindstring += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", <value>);' + lb;
 		parameterstring += '$' + column + comma2;
 	}
 	
@@ -168,10 +168,10 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxo
 		var comma2 = (i == columnList.length - 1) ? '' : ', ';
 		var lb = (i == columnList.length - 1) ? '' : '\n';
 
-        transformed += '`' + column + '` = ' + value + comma + '\n';
+        transformed += '`' + column + '` = :' + value + comma + '\n';
 		ajaxdatastring += '\t\t' + column + ': ' + value + '' + comma + '\n';
 		issetstring += '$_' + requesttype + '["' + column + '"]' + comma2;
-		bindstring += '$query->bindValue("' + column + '", ' + value + ');' + lb;
+		bindstring += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", <value>);' + lb;
 		parameterstring += '$' + column + comma2;
     }
 
@@ -238,11 +238,11 @@ MysqlTransformer.prototype.AjaxToSQL = function (ajaxstring, outputselector1, ou
 				var lb = (i == parsedajax.keys.length - 1) ? '' : '\n';
 				
 				insertTransform += '`' + key + '`' + comma + lb;
-				insertValues += value + comma + lb;
-				updateTransform += '`' + key + '` = ' + value + comma + '\n';
+				insertValues += ':' + value + comma + lb;
+				updateTransform += '`' + key + '` = :' + value + comma + '\n';
 				
 				issetstring += '$_' + requesttype + '["' + key + '"]' + comma2;
-				bindstring += '$query->bindValue("' + key + '", ' + value + ');' + lb;
+				bindstring += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", <value>);' + lb;
 				parameterstring += '$' + key + comma2;
 			}
 			
@@ -278,27 +278,27 @@ MysqlTransformer.prototype.AjaxToSQL = function (ajaxstring, outputselector1, ou
 //Helper to remove tabs and newlines from a string
 MysqlTransformer.prototype.rt = function (str)
 {
-    return str.replace(/(\r\n|\n|\r|\t)/gm, '').replace(' ', '');
+    return str.replace(/(\r\n|\n|\r|\t|\s+)/g, '');
 };
 
 //"Hack" to convert a column list in a string form into a JavaScript array
 MysqlTransformer.prototype.columnListStringToArray = function (str)
 {
-    var returnarray = str.replace("(", "").replace(")", "").replace(/\`/g, "").replace(/\'/g, "").replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, "").split(',');
+    var returnarray = str.replace("(", "").replace(")", "").replace(/\`|\'|\r\n|\n|\r|\s+|<{|}>|:/g, "").split(',');
     return returnarray;
 };
 
 //"Hack" to convert a value list in a string form into a JavaScript array
 MysqlTransformer.prototype.valueListStringToArray = function (str)
 {
-    var returnarray = str.replace("(", "").replace(")", "").replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, "").split(',');
+    var returnarray = str.replace("(", "").replace(")", "").replace(/\r\n|\n|\r|\s+|<{|}>|:/g, "").split(',');
     return returnarray;
 };
 
 //"Hack" to convert a set list in a string form into a JavaScript array
 MysqlTransformer.prototype.setlistStringToArray = function (str)
 {
-    var returnarray = str.replace(/,/g, "=").replace(/\`/g, "").replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, "").split('=');
+    var returnarray = str.replace(/,/g, "=").replace(/\`/g, "").replace(/\r\n|\n|\r|\s+|<{|}>|:/g, "").split('=');
 
     //Try to do some parsing so that numeric data is kept numeric
     for (var rar in returnarray)
@@ -317,7 +317,7 @@ MysqlTransformer.prototype.setlistStringToArray = function (str)
 //"Hack to convert jquery-like ajax call to JSON
 MysqlTransformer.prototype.ajaxToJSON = function(ajaxstr)
 {
-	var stripped = ajaxstr.replace('$.ajax(', '').replace(');', '').replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, "");
+	var stripped = ajaxstr.replace('$.ajax(', '').replace(');', '').replace(/\r\n|\n|\r|\s+|<{|}>/g, "");
 	stripped = stripped.substring(stripped.indexOf('data:{') + 6, stripped.indexOf('}', stripped.indexOf('data:{'))).split(',');
 	
 	var returnlists = 
@@ -328,7 +328,7 @@ MysqlTransformer.prototype.ajaxToJSON = function(ajaxstr)
 	
 	for(var i = 0; i < stripped.length; i++)
 	{
-		if((stripped[i].match(/is/g) || []).length === 1)
+		if((stripped[i].match(/:/g) || []).length === 1)
 		{
 			var split = stripped[i].split(':');
 		}

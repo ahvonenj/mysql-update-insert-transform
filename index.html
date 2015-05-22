@@ -34,16 +34,24 @@
 		textarea#updatearea
 		{
             display: block;
-            width: 70%;
+            width: 65%;
             height: 35%;
 			float: left;
+			
+			-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+			-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+			box-sizing: border-box;         /* Opera/IE 8+ */
         }
 		
 		textarea#ajaxarea
 		{
-			width: 29%;
-			height: calc(35% + 35% + 50px + 25px);
+			width: 34%;
+			height: calc(35% + 35% + 50px + 25px - 80px);
 			float: right;
+			
+			-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+			-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+			box-sizing: border-box;         /* Opera/IE 8+ */
 		}
         
         input[type="button"] 
@@ -73,10 +81,18 @@
 			height: 25px;
 		}
 		
-		label[for=urlfield]
+		#urlfield
 		{
 			margin-top: 15px;
-			display: inline-block;
+			display: block;
+		}
+		
+		#ajaxtosql
+		{
+			float: right;
+			width: 34%;
+            height: 70px;
+            margin: 10px 0px 0px 0px;
 		}
     </style>
 
@@ -90,6 +106,7 @@
     <div id="wrapper">
         <h1>mysql-update-insert-transform</h1>
 
+		
 		<textarea id="ajaxarea" placeholder="Ajax call will be output here..."></textarea>
 		
         <textarea id="insertarea" placeholder="Insert query here..."></textarea>
@@ -101,7 +118,8 @@
 
         <textarea id="updatearea" placeholder="Update query here..."></textarea>
 		
-		<label for = "urlfield">Link to transform</label>
+		<input type="button" id="ajaxtosql" value="AJAX -> SQL"></input>
+		
 		<input type = "text" id = "urlfield" placeholder = "Link to query will be generated here"></input>
 		
     </div>

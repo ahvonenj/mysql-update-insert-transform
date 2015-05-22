@@ -4,7 +4,7 @@ function MysqlTransformer()
 }
 
 //Update query to insert query transform
-MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxoutputselector, onerrorcallback)
+MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxoutputselector, functionoutputselector, radiogroupselector, onerrorcallback)
 {
     if (typeof sql === 'undefined' || sql.length < 20)
     {
@@ -48,6 +48,10 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxo
     }
 
 	var ajaxdatastring = '';
+	var issetstring = 'if(isset(';
+	var bindstring = '';
+	var parameterstring = 'function someFunction(';
+	var functionstring = '';
 	
     //Make the transform string
     transformed += tableName + '\n(';
@@ -71,24 +75,37 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxo
 
     transformed += ')\n' + transformed_values + ');';
 	
+	var requesttype = $(radiogroupselector + ' input[type=radio]:checked').val();
+	
 	for(var i = 0; i < splitSetlist.columns.length; i++)
 	{
 		var comma = (i == splitSetlist.columns.length - 1) ? '' : ',';
+		var comma2 = (i == splitSetlist.columns.length - 1) ? '' : ', ';
+		var lb = (i == splitSetlist.columns.length - 1) ? '' : '\n';
 		var column = splitSetlist.columns[i];
 		var value = splitSetlist.values[i];
 		
 		ajaxdatastring += '\t\t' + column + ': ' + value + '' + comma + '\n';
+		issetstring += '$_' + requesttype + '["' + column + '"]' + comma2;
+		bindstring += '$query->bindValue("' + column + '", ' + value + ');' + lb;
+		parameterstring += '$' + column + comma2;
 	}
 	
 	var ajaxstring = '$.ajax(\n{\n\ttype: "type",\n\turl: "url",\n\tdata:\n\t{\n' + ajaxdatastring + '\t}\n});';
+	
+	issetstring += '))\n{\n\t\n}';
+	parameterstring += ')\n{\n\t\n}';
+	
+	functionstring += issetstring + '\n\n\n' + bindstring + '\n\n\n' + parameterstring;
 
     //Output transformed query
     $(outputselector).val(transformed);
 	$(ajaxoutputselector).val(ajaxstring);
+	$(functionoutputselector).val(functionstring);
 };
 
 //Insert query to update query transform
-MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxoutputselector, onerrorcallback)
+MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxoutputselector, functionoutputselector, radiogroupselector, onerrorcallback)
 {
     if (typeof sql === 'undefined' || sql.length < 20)
     {
@@ -133,6 +150,12 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxo
     }
 
 	var ajaxdatastring = '';
+	var issetstring = 'if(isset(';
+	var bindstring = '';
+	var parameterstring = 'function someFunction(';
+	var functionstring = '';
+	
+	var requesttype = $(radiogroupselector + ' input[type=radio]:checked').val();
 	
     //Make the transform string
     transformed += tableName + '\nSET\n';
@@ -142,22 +165,33 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxo
         var column = (columnList[i].length > 0) ? columnList[i] : null;
         var value = (valueList[i].length > 0) ? valueList[i] : null;
         var comma = (i == columnList.length - 1) ? '' : ',';
+		var comma2 = (i == columnList.length - 1) ? '' : ', ';
+		var lb = (i == columnList.length - 1) ? '' : '\n';
 
         transformed += '`' + column + '` = ' + value + comma + '\n';
 		ajaxdatastring += '\t\t' + column + ': ' + value + '' + comma + '\n';
+		issetstring += '$_' + requesttype + '["' + column + '"]' + comma2;
+		bindstring += '$query->bindValue("' + column + '", ' + value + ');' + lb;
+		parameterstring += '$' + column + comma2;
     }
 
     transformed += 'WHERE `someid` = :somevalue;';
 	
 	var ajaxstring = '$.ajax(\n{\n\ttype: "type",\n\turl: "url",\n\tdata:\n\t{\n' + ajaxdatastring + '\t}\n});';
+	
+	issetstring += '))\n{\n\t\n}';
+	parameterstring += ')\n{\n\t\n}';
+	
+	functionstring += issetstring + '\n\n\n' + bindstring + '\n\n\n' + parameterstring;
 
     //Output transformed query
     $(outputselector).val(transformed);
 	$(ajaxoutputselector).val(ajaxstring);
+	$(functionoutputselector).val(functionstring);
 };
 
 //Jquery-like ajax call to SQL transform
-MysqlTransformer.prototype.AjaxToSQL = function (ajaxstring, outputselector1, outputselector2, onerrorcallback)
+MysqlTransformer.prototype.AjaxToSQL = function (ajaxstring, outputselector1, outputselector2, functionoutputselector, radiogroupselector, onerrorcallback)
 {
 	if (typeof ajaxstring === 'undefined' || ajaxstring.length < 10)
     {
@@ -184,6 +218,12 @@ MysqlTransformer.prototype.AjaxToSQL = function (ajaxstring, outputselector1, ou
 	var insertTransform = 'INSERT INTO ' + tableName + '\n(';
 	var insertValues = 'VALUES\n(';
 	var updateTransform = 'UPDATE ' + tableName + '\nSET\n';
+	var issetstring = 'if(isset(';
+	var bindstring = '';
+	var parameterstring = 'function someFunction(';
+	var functionstring = '';
+	
+	var requesttype = $(radiogroupselector + ' input[type=radio]:checked').val();
 	
 	if(typeof parsedajax !== 'undefined')
 	{
@@ -194,18 +234,29 @@ MysqlTransformer.prototype.AjaxToSQL = function (ajaxstring, outputselector1, ou
 				var key = (parsedajax.keys[i].length > 0) ? parsedajax.keys[i] : null;
 				var value = (parsedajax.values[i].length > 0) ? parsedajax.values[i] : null;
 				var comma = (i == parsedajax.keys.length - 1) ? '' : ',';
+				var comma2 = (i == parsedajax.keys.length - 1) ? '' : ', ';
 				var lb = (i == parsedajax.keys.length - 1) ? '' : '\n';
 				
 				insertTransform += '`' + key + '`' + comma + lb;
 				insertValues += value + comma + lb;
 				updateTransform += '`' + key + '` = ' + value + comma + '\n';
+				
+				issetstring += '$_' + requesttype + '["' + key + '"]' + comma2;
+				bindstring += '$query->bindValue("' + key + '", ' + value + ');' + lb;
+				parameterstring += '$' + key + comma2;
 			}
 			
 			insertTransform += ')\n' + insertValues + ');';
 			updateTransform += 'WHERE `someid` = :somevalue;';
 			
+			issetstring += '))\n{\n\t\n}';
+			parameterstring += ')\n{\n\t\n}';
+			
+			functionstring += issetstring + '\n\n\n' + bindstring + '\n\n\n' + parameterstring;
+			
 			$(outputselector1).val(updateTransform);
 			$(outputselector2).val(insertTransform);
+			$(functionoutputselector).val(functionstring);
 		}
 		else
 		{
@@ -247,7 +298,7 @@ MysqlTransformer.prototype.valueListStringToArray = function (str)
 //"Hack" to convert a set list in a string form into a JavaScript array
 MysqlTransformer.prototype.setlistStringToArray = function (str)
 {
-    var returnarray = str.replace(/,/g, "=").replace(/\`/g, "").replace(/\'/g, "").replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, "").split('=');
+    var returnarray = str.replace(/,/g, "=").replace(/\`/g, "").replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, "").split('=');
 
     //Try to do some parsing so that numeric data is kept numeric
     for (var rar in returnarray)
@@ -266,7 +317,7 @@ MysqlTransformer.prototype.setlistStringToArray = function (str)
 //"Hack to convert jquery-like ajax call to JSON
 MysqlTransformer.prototype.ajaxToJSON = function(ajaxstr)
 {
-	var stripped = ajaxstr.replace('$.ajax(', '').replace(');', '').replace(/\'/g, "").replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, "");
+	var stripped = ajaxstr.replace('$.ajax(', '').replace(');', '').replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, "");
 	stripped = stripped.substring(stripped.indexOf('data:{') + 6, stripped.indexOf('}', stripped.indexOf('data:{'))).split(',');
 	
 	var returnlists = 

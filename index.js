@@ -6,7 +6,7 @@ $(document).ready(function ()
 
     $('#updatetoinsert').on('click', function ()
     {
-        transformer.UpdateToInsert($('#updatearea').val(), '#insertarea', '#ajaxarea', function (errormsg)
+        transformer.UpdateToInsert($('#updatearea').val(), '#insertarea', '#ajaxarea', '#functionarea', '#radio_wrapper', function (errormsg)
         {
             alert(errormsg);
         });
@@ -16,7 +16,7 @@ $(document).ready(function ()
 
     $('#inserttoupdate').on('click', function ()
     {
-        transformer.InsertToUpdate($('#insertarea').val(), '#updatearea', '#ajaxarea', function (errormsg)
+        transformer.InsertToUpdate($('#insertarea').val(), '#updatearea', '#ajaxarea', '#functionarea', '#radio_wrapper', function (errormsg)
         {
             alert(errormsg);
         });
@@ -26,13 +26,18 @@ $(document).ready(function ()
 	
 	$('#ajaxtosql').on('click', function ()
     {
-        transformer.AjaxToSQL($('#ajaxarea').val(), '#updatearea', '#insertarea', function (errormsg)
+        transformer.AjaxToSQL($('#ajaxarea').val(), '#updatearea', '#insertarea', '#functionarea', '#radio_wrapper', function (errormsg)
         {
             alert(errormsg);
         });
 		
 		$('#urlfield').val(getUrl() + '?querytype=ajax&query=' + encodeURIComponent($('#ajaxarea').val()).replace(/%20/g,'+'));
     });
+	
+	$('#urlfield').on('click', function()
+	{
+		$(this).select();	
+	});
 	
 	var linkedquery = getParameterByName('query');
 	var linkedquerytype = getParameterByName('querytype');

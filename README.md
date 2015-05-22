@@ -24,7 +24,7 @@ The tool can be found online, here: [click](http://ahvonenj.github.io/mysql-upda
 
 ![](https://github.com/ahvonenj/mysql-update-insert-transform/blob/master/example_image.PNG?raw=true)
 
-# Example queries
+# Example inputs
 
 ## Insert
 
@@ -48,3 +48,22 @@ SET
 `somecolumnG` = :somesubstitutionG,
 `somecolumnH` = :somesubstitutionH
 WHERE `someid` = :somevalue;```
+
+## Ajax
+
+```$.ajax(
+{
+	type: <type>,
+	url: <url>,
+	data:
+	{
+		somecolumnA: <value>,
+		somecolumnB: <value>,
+		somecolumnC: <value>,
+		somecolumnD: <value>,
+		somecolumnE: <value>,
+		somecolumnF: <value>,
+		somecolumnG: <value>,
+		somecolumnH: <value>
+	}
+});```

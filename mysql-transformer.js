@@ -261,7 +261,7 @@ MysqlTransformer.prototype.setlistStringToArray = function (str)
 MysqlTransformer.prototype.ajaxToJSON = function(ajaxstr)
 {
 	var stripped = ajaxstr.replace('$.ajax(', '').replace(');', '').replace(/\'/g, "").replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, "");
-	stripped = stripped.substring(stripped.indexOf('data:{') + 6, stripped.indexOf('}', stripped.indexOf('data:{')) - 1).split(',');
+	stripped = stripped.substring(stripped.indexOf('data:{') + 6, stripped.indexOf('}', stripped.indexOf('data:{'))).split(',');
 	
 	var returnlists = 
 	{

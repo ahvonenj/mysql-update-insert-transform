@@ -1,4 +1,4 @@
-# mysql-update-insert-transform
+# mysql-update-insert(-ajax)-transform
 
 A tool for transforming MySQL insert statements to update statements and vice versa.
 
@@ -13,11 +13,16 @@ NOTE: You should probably be using '[UPSERT](http://stackoverflow.com/questions/
 
 The tool can be found online, here: [click](http://ahvonenj.github.io/mysql-update-insert-transform/)
 
+# Version 2
+
+- Implemented a shareable link generation
+- Implemented SQL to ajax transform
+- Implemented ajax to SQL transform
+- Fixed some edge cases with queries and ajax 
+
 # Examples
 
 ![](https://github.com/ahvonenj/mysql-update-insert-transform/blob/master/example_image.PNG?raw=true)
-
-![](https://github.com/ahvonenj/mysql-update-insert-transform/blob/master/example_image_2.PNG?raw=true)
 
 # Example queries
 

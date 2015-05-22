@@ -30,6 +30,8 @@ The tool can be found online, here: [click](http://ahvonenj.github.io/mysql-upda
 
 ## Insert
 
+[Link](http://ahvonenj.github.io/mysql-update-insert-transform/?querytype=insert&query=INSERT+INTO+%60somedb%60.%60sometable%60%0A(%60somecolumnA%60%2C%0A%60somecolumnB%60%2C%0A%60somecolumnC%60%2C%0A%60somecolumnD%60%2C%0A%60somecolumnE%60%2C%0A%60somecolumnF%60%2C%0A%60somecolumnG%60%2C%0A%60somecolumnH%60)%0AVALUES%0A(%3AsomesubstitutionA%2C%0A%3AsomesubstitutionB%2C%0A%3AsomesubstitutionC%2C%0A%3AsomesubstitutionD%2C%0A%3AsomesubstitutionE%2C%0A%3AsomesubstitutionF%2C%0A%3AsomesubstitutionG%2C%0A%3AsomesubstitutionH)%3B)
+
 ```
 INSERT INTO `somedb`.`sometable`
 (`somecolumnA`,
@@ -52,6 +54,8 @@ VALUES
 ```
 
 ## Update
+
+[Link](http://ahvonenj.github.io/mysql-update-insert-transform/?querytype=update&query=UPDATE+%60somedb%60.%60sometable%60%0ASET%0A%60somecolumnA%60+%3D+%3AsomesubstitutionA%2C%0A%60somecolumnB%60+%3D+%3AsomesubstitutionB%2C%0A%60somecolumnC%60+%3D+%3AsomesubstitutionC%2C%0A%60somecolumnD%60+%3D+%3AsomesubstitutionD%2C%0A%60somecolumnE%60+%3D+%3AsomesubstitutionE%2C%0A%60somecolumnF%60+%3D+%3AsomesubstitutionF%2C%0A%60somecolumnG%60+%3D+%3AsomesubstitutionG%2C%0A%60somecolumnH%60+%3D+%3AsomesubstitutionH%0AWHERE+%60someid%60+%3D+%3Asomevalue%3B)
 
 ```
 UPDATE `somedb`.`sometable`

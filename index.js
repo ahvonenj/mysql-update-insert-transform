@@ -11,7 +11,7 @@ $(document).ready(function ()
             alert(errormsg);
         });
 		
-		$('#urlfield').val(getUrl() + '?querytype=update&query=' + $('#updatearea').val());
+		$('#urlfield').val(getUrl() + '?querytype=update&query=' + encodeURIComponent($('#updatearea').val()).replace(/%20/g,'+'));
     });
 
     $('#inserttoupdate').on('click', function ()
@@ -21,7 +21,7 @@ $(document).ready(function ()
             alert(errormsg);
         });
 		
-		$('#urlfield').val(getUrl() + '?querytype=insert&query=' + $('#insertarea').val());
+		$('#urlfield').val(getUrl() + '?querytype=insert&query=' + encodeURIComponent($('#insertarea').val()).replace(/%20/g,'+'));
     });
 	
 	var linkedquery = getParameterByName('query');

@@ -51,7 +51,8 @@ WHERE `someid` = :somevalue;```
 
 ## Ajax
 
-```$.ajax(
+```
+$.ajax(
 {
 	type: <type>,
 	url: <url>,

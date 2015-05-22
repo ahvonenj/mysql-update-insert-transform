@@ -62,6 +62,7 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxo
         }
         else
         {
+			columnorvalue = (columnorvalue.length > 0) ? columnorvalue : null;
             transformed_values += columnorvalue + comma + lb;
         }
     }
@@ -134,8 +135,8 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxo
 
     for (var i = 0; i < columnList.length; i++)
     {
-        var column = columnList[i];
-        var value = valueList[i];
+        var column = (columnList[i].length > 0) ? columnList[i] : null;
+        var value = (valueList[i].length > 0) ? valueList[i] : null;
         var comma = (i == columnList.length - 1) ? '' : ',';
 
         transformed += '`' + column + '` = ' + value + comma + '\n';
@@ -184,8 +185,8 @@ MysqlTransformer.prototype.AjaxToSQL = function (ajaxstring, outputselector1, ou
 		{
 			for(var i = 0; i < parsedajax.keys.length; i++)
 			{
-				var key = parsedajax.keys[i];
-				var value = parsedajax.values[i];
+				var key = (parsedajax.keys[i].length > 0) ? parsedajax.keys[i] : null;
+				var value = (parsedajax.values[i].length > 0) ? parsedajax.values[i] : null;
 				var comma = (i == parsedajax.keys.length - 1) ? '' : ',';
 				var lb = (i == parsedajax.keys.length - 1) ? '' : '\n';
 				
@@ -260,7 +261,7 @@ MysqlTransformer.prototype.setlistStringToArray = function (str)
 MysqlTransformer.prototype.ajaxToJSON = function(ajaxstr)
 {
 	var stripped = ajaxstr.replace('$.ajax(', '').replace(');', '').replace(/\'/g, "").replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, "");
-	stripped = stripped.substring(stripped.indexOf('data:{') + 6, stripped.lastIndexOf('}') - 1).split(',');
+	stripped = stripped.substring(stripped.indexOf('data:{') + 6, stripped.indexOf('}', stripped.indexOf('data:{')) - 1).split(',');
 	
 	var returnlists = 
 	{

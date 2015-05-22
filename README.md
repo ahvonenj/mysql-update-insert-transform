@@ -70,18 +70,18 @@ WHERE `someid` = :somevalue;
 ```
 $.ajax(
 {
-	type: <type>,
-	url: <url>,
+	type: "type",
+	url: "url",
 	data:
 	{
-		somecolumnA: <value>,
-		somecolumnB: <value>,
-		somecolumnC: <value>,
-		somecolumnD: <value>,
-		somecolumnE: <value>,
-		somecolumnF: <value>,
-		somecolumnG: <value>,
-		somecolumnH: <value>
+		somecolumnA: :somesubstitutionA,
+		somecolumnB: :somesubstitutionB,
+		somecolumnC: :somesubstitutionC,
+		somecolumnD: :somesubstitutionD,
+		somecolumnE: :somesubstitutionE,
+		somecolumnF: :somesubstitutionF,
+		somecolumnG: :somesubstitutionG,
+		somecolumnH: :somesubstitutionH
 	}
 });
 ```

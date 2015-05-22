@@ -31,7 +31,7 @@ $(document).ready(function ()
             alert(errormsg);
         });
 		
-		//$('#urlfield').val(getUrl() + '?querytype=insert&query=' + encodeURIComponent($('#insertarea').val()).replace(/%20/g,'+'));
+		$('#urlfield').val(getUrl() + '?querytype=ajax&query=' + encodeURIComponent($('#ajaxarea').val()).replace(/%20/g,'+'));
     });
 	
 	var linkedquery = getParameterByName('query');
@@ -47,6 +47,10 @@ $(document).ready(function ()
 		else if(linkedquerytype == 'update')
 		{
 			$('#updatearea').val(linkedquery);
+		}
+		else if(linkedquerytype == 'ajax')
+		{
+			$('#ajaxarea').val(linkedquery);
 		}
 	}
 	

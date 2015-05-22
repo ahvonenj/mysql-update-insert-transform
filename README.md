@@ -28,16 +28,19 @@ The tool can be found online, here: [click](http://ahvonenj.github.io/mysql-upda
 
 ## Insert
 
-```INSERT INTO `somedb`.`sometable`
+```
+INSERT INTO `somedb`.`sometable`
 			(`somecolumnA`, `somecolumnB`, `somecolumnC`, `somecolumnD`, `somecolumnE`, `somecolumnF`, `somecolumnG`,
 			`somecolumnH`)
 			VALUES
 			(:somesubstitutionA, :somesubstitutionB, :somesubstitutionC, :somesubstitutionD, :somesubstitutionE, :somesubstitutionF, :somesubstitutionG,
-			:somesubstitutionH)```
+			:somesubstitutionH)
+```
 
 ## Update
 
-```UPDATE `somedb`.`sometable`
+```
+UPDATE `somedb`.`sometable`
 SET
 `somecolumnA` = :somesubstitutionA,
 `somecolumnB` = :somesubstitutionB,
@@ -47,7 +50,8 @@ SET
 `somecolumnF` = :somesubstitutionF,
 `somecolumnG` = :somesubstitutionG,
 `somecolumnH` = :somesubstitutionH
-WHERE `someid` = :somevalue;```
+WHERE `someid` = :somevalue;
+```
 
 ## Ajax
 
@@ -67,4 +71,5 @@ $.ajax(
 		somecolumnG: <value>,
 		somecolumnH: <value>
 	}
-});```
+});
+```

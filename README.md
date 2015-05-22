@@ -22,9 +22,24 @@ The tool can be found online, here: [click](http://ahvonenj.github.io/mysql-upda
 - Implemented ajax to SQL transform
 - Fixed some edge cases with queries and ajax that broke the app
 
+## Version 3
+
+- Implemented function generator
+- Bugfixes
+
 # Examples
 
+## V2
+
 ![](https://github.com/ahvonenj/mysql-update-insert-transform/blob/master/example_image.PNG?raw=true)
+
+## V3
+
+![](https://github.com/ahvonenj/mysql-update-insert-transform/blob/master/example_image_v3.PNG?raw=true)
+
+## V3b
+
+![](https://github.com/ahvonenj/mysql-update-insert-transform/blob/master/example_image_v3_b.PNG?raw=true)
 
 # Example inputs
 

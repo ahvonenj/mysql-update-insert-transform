@@ -30,11 +30,23 @@ The tool can be found online, here: [click](http://ahvonenj.github.io/mysql-upda
 
 ```
 INSERT INTO `somedb`.`sometable`
-			(`somecolumnA`, `somecolumnB`, `somecolumnC`, `somecolumnD`, `somecolumnE`, `somecolumnF`, `somecolumnG`,
-			`somecolumnH`)
-			VALUES
-			(:somesubstitutionA, :somesubstitutionB, :somesubstitutionC, :somesubstitutionD, :somesubstitutionE, :somesubstitutionF, :somesubstitutionG,
-			:somesubstitutionH)
+(`somecolumnA`,
+`somecolumnB`,
+`somecolumnC`,
+`somecolumnD`,
+`somecolumnE`,
+`somecolumnF`,
+`somecolumnG`,
+`somecolumnH`)
+VALUES
+(:somesubstitutionA,
+:somesubstitutionB,
+:somesubstitutionC,
+:somesubstitutionD,
+:somesubstitutionE,
+:somesubstitutionF,
+:somesubstitutionG,
+:somesubstitutionH);
 ```
 
 ## Update

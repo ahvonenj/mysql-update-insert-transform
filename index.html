@@ -64,6 +64,20 @@
 		{
             margin-top: 5px;
         }
+		
+		#urlfield
+		{
+			float: left;		
+			display: block;
+			width: 100%;
+			height: 25px;
+		}
+		
+		label[for=urlfield]
+		{
+			margin-top: 15px;
+			display: inline-block;
+		}
     </style>
 
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -87,6 +101,8 @@
 
         <textarea id="updatearea" placeholder="Update query here..."></textarea>
 		
+		<label for = "urlfield">Link to transform</label>
+		<input type = "text" id = "urlfield" placeholder = "Link to query will be generated here"></input>
 		
     </div>
 </body>

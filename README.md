@@ -73,6 +73,8 @@ WHERE `someid` = :somevalue;
 
 ## Ajax
 
+[Link](http://ahvonenj.github.io/mysql-update-insert-transform/?querytype=ajax&query=%24.ajax(%0A%7B%0A%09type%3A+%22type%22%2C%0A%09url%3A+%22url%22%2C%0A%09data%3A%0A%09%7B%0A%09%09somecolumnA%3A+%3AsomesubstitutionA%2C%0A%09%09somecolumnB%3A+%3AsomesubstitutionB%2C%0A%09%09somecolumnC%3A+%3AsomesubstitutionC%2C%0A%09%09somecolumnD%3A+%3AsomesubstitutionD%2C%0A%09%09somecolumnE%3A+%3AsomesubstitutionE%2C%0A%09%09somecolumnF%3A+%3AsomesubstitutionF%2C%0A%09%09somecolumnG%3A+%3AsomesubstitutionG%2C%0A%09%09somecolumnH%3A+%3AsomesubstitutionH%0A%09%7D%0A%7D)%3B)
+
 ```
 $.ajax(
 {

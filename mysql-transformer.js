@@ -1,6 +1,6 @@
 function MysqlTransformer()
 {
-
+	this.storedTableName = '';
 }
 
 //Update query to insert query transform
@@ -35,6 +35,8 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxo
     var setlist = this.setlistStringToArray(this.rt(sql.substring(setStmtIdx + 3, whereStmtIdx)));
 
     var splitSetlist = this.splitSetlist(setlist);
+	
+	this.storedTableName = tableName;
 
     //Check that column and value counts match
     if (splitSetlist.columns.length !== splitSetlist.values.length)
@@ -119,6 +121,8 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxo
     var columnList = this.columnListStringToArray(this.rt(sql.substring(columnListIdx - 1, columnListLastIdx + 1)));
     var valueList = this.valueListStringToArray(this.rt(sql.substring(valueListIdx - 1, valueListLastIdx + 1)));
 
+	this.storedTableName = tableName;
+	
     //Check that column and value counts match
     if (columnList.length !== valueList.length)
     {
@@ -175,9 +179,11 @@ MysqlTransformer.prototype.AjaxToSQL = function (ajaxstring, outputselector1, ou
 	
 	console.log(parsedajax);
 	
-	var insertTransform = 'INSERT INTO `somedb`.`sometable`\n(';
+	var tableName = (this.storedTableName !== '') ? this.storedTableName : '`somedb`.`sometable`';
+	
+	var insertTransform = 'INSERT INTO ' + tableName + '\n(';
 	var insertValues = 'VALUES\n(';
-	var updateTransform = 'UPDATE `somedb`.`sometable`\nSET\n';
+	var updateTransform = 'UPDATE ' + tableName + '\nSET\n';
 	
 	if(typeof parsedajax !== 'undefined')
 	{

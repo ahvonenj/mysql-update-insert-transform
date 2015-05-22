@@ -24,6 +24,16 @@ $(document).ready(function ()
 		$('#urlfield').val(getUrl() + '?querytype=insert&query=' + encodeURIComponent($('#insertarea').val()).replace(/%20/g,'+'));
     });
 	
+	$('#ajaxtosql').on('click', function ()
+    {
+        transformer.AjaxToSQL($('#ajaxarea').val(), '#updatearea', '#insertarea', function (errormsg)
+        {
+            alert(errormsg);
+        });
+		
+		//$('#urlfield').val(getUrl() + '?querytype=insert&query=' + encodeURIComponent($('#insertarea').val()).replace(/%20/g,'+'));
+    });
+	
 	var linkedquery = getParameterByName('query');
 	var linkedquerytype = getParameterByName('querytype');
 	

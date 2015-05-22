@@ -154,6 +154,22 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxo
 //Jquery-like ajax call to SQL transform
 MysqlTransformer.prototype.AjaxToSQL = function (ajaxstring, outputselector1, outputselector2, onerrorcallback)
 {
+	if (typeof ajaxstring === 'undefined' || ajaxstring.length < 10)
+    {
+        if (typeof onerrorcallback !== 'undefined')
+            onerrorcallback('Ajax call cannot possibly be this short');
+
+        return;
+    }
+
+    if (!this.isValidAjax(ajaxstring))
+    {
+        if (typeof onerrorcallback !== 'undefined')
+            onerrorcallback('Ajax call does not seem to be valid');
+
+        return;
+    }
+
 	var parsedajax = this.ajaxToJSON(ajaxstring);
 	
 	console.log(parsedajax);
@@ -330,6 +346,20 @@ MysqlTransformer.prototype.isValidUpdate = function (querystring)
     if (querystring.indexOf('UPDATE') > -1 &&
         querystring.indexOf('SET') > -1 &&
         querystring.indexOf('WHERE') > -1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+};
+
+//Check if the given ajaxstring is somewhat valid ajax call
+MysqlTransformer.prototype.isValidAjax = function (ajaxstring)
+{
+    if (ajaxstring.indexOf('$.ajax') > -1 &&
+        ajaxstring.indexOf('data:') > -1)
     {
         return true;
     }

@@ -4,7 +4,7 @@ function MysqlTransformer()
 }
 
 //Update query to insert query transform
-MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, onerrorcallback)
+MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxoutputselector, onerrorcallback)
 {
     if (typeof sql === 'undefined' || sql.length < 20)
     {
@@ -45,6 +45,8 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, onerr
         return;
     }
 
+	var ajaxdatastring = '';
+	
     //Make the transform string
     transformed += tableName + '\n(';
 
@@ -57,6 +59,7 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, onerr
         if (i == 0 || i % 2 == 0)
         {
             transformed += '`' + columnorvalue + '`' + comma + lb;
+			ajaxdatastring += '\t\t' + columnorvalue + ': <value>' + comma + '\n';
         }
         else
         {
@@ -65,13 +68,16 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, onerr
     }
 
     transformed += ')\n' + transformed_values + ');';
+	
+	var ajaxstring = '$.ajax(\n{\n\ttype: <type>,\n\turl: <url>,\n\tdata:\n\t{\n' + ajaxdatastring + '\t}\n});';
 
     //Output transformed query
     $(outputselector).val(transformed);
+	$(ajaxoutputselector).val(ajaxstring);
 };
 
 //Insert query to update query transform
-MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, onerrorcallback)
+MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxoutputselector, onerrorcallback)
 {
     if (typeof sql === 'undefined' || sql.length < 20)
     {
@@ -113,6 +119,8 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, onerr
         return;
     }
 
+	var ajaxdatastring = '';
+	
     //Make the transform string
     transformed += tableName + '\nSET\n';
 
@@ -123,12 +131,16 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, onerr
         var comma = (i == columnList.length - 1) ? '' : ',';
 
         transformed += '`' + column + '` = ' + value + comma + '\n';
+		ajaxdatastring += '\t\t' + column + ': <value>' + comma + '\n';
     }
 
     transformed += 'WHERE `someid` = :somevalue;';
+	
+	var ajaxstring = '$.ajax(\n{\n\ttype: <type>,\n\turl: <url>,\n\tdata:\n\t{\n' + ajaxdatastring + '\t}\n});';
 
     //Output transformed query
     $(outputselector).val(transformed);
+	$(ajaxoutputselector).val(ajaxstring);
 };
 
 //Helper to remove tabs and newlines from a string

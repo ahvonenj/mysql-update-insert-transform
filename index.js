@@ -6,7 +6,7 @@ $(document).ready(function ()
 
     $('#updatetoinsert').on('click', function ()
     {
-        transformer.UpdateToInsert($('#updatearea').val(), '#insertarea', function (errormsg)
+        transformer.UpdateToInsert($('#updatearea').val(), '#insertarea', '#ajaxarea', function (errormsg)
         {
             alert(errormsg);
         });
@@ -14,7 +14,7 @@ $(document).ready(function ()
 
     $('#inserttoupdate').on('click', function ()
     {
-        transformer.InsertToUpdate($('#insertarea').val(), '#updatearea', function (errormsg)
+        transformer.InsertToUpdate($('#insertarea').val(), '#updatearea', '#ajaxarea', function (errormsg)
         {
             alert(errormsg);
         });

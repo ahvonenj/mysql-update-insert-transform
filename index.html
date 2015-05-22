@@ -30,26 +30,38 @@
             padding-top: 15px;
         }
         
-        textarea {
+        textarea#insertarea,
+		textarea#updatearea
+		{
             display: block;
-            width: 100%;
+            width: 70%;
             height: 35%;
+			float: left;
         }
+		
+		textarea#ajaxarea
+		{
+			width: 25%;
+			height: calc(35% + 35% + 50px + 25px);
+			float: right;
+		}
         
-        input[type="button"] {
+        input[type="button"] 
+		{
             width: 200px;
             height: 50px;
             margin: 10px 5px 10px 5px;
         }
         
-        #button_wrapper {
+        #button_wrapper
+		{
             width: calc(400px + 25px);
-            margin-left: auto;
-            margin-right: auto;
+            margin-left: calc((70% / 2) - (425px / 2));
             height: auto;
         }
         
-        #updatearea {
+        #updatearea 
+		{
             margin-top: 5px;
         }
     </style>
@@ -64,6 +76,8 @@
     <div id="wrapper">
         <h1>mysql-update-insert-transform</h1>
 
+		<textarea id="ajaxarea" placeholder="Ajax query will be output here..."></textarea>
+		
         <textarea id="insertarea" placeholder="Insert query here..."></textarea>
 
         <div id="button_wrapper">
@@ -72,6 +86,8 @@
         </div>
 
         <textarea id="updatearea" placeholder="Update query here..."></textarea>
+		
+		
     </div>
 </body>
 

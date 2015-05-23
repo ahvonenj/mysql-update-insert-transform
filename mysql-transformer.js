@@ -247,7 +247,7 @@ MysqlTransformer.prototype.AjaxToSQL = function (ajaxstring, outputselector1, ou
 				updateTransform += '`' + key + '` = :' + value + comma + '\n';
 				
 				issetstring += '$_' + requesttype + '["' + key + '"]' + comma2;
-				bindstring += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", $' + column.replace(/'|`|"/g, '') + ');' + lb;
+				bindstring += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", $' + key.replace(/'|`|"/g, '') + ');' + lb;
 				bindstring2 += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", $_' + requesttype + '["' + key.replace(/'|`|"/g, '') + '"]);' + lb;
 				parameterstring += '$' + key + comma2;
 			}
@@ -336,13 +336,13 @@ MysqlTransformer.prototype.ajaxToJSON = function(ajaxstr)
 	{
 		if((stripped[i].match(/:/g) || []).length === 1)
 		{
-			var split = stripped[i].split(':');
+			var split = stripped[i].replace(/'|´|"/g, "").split(':');
 		}
 		else
 		{
 			var firstIdx = stripped[i].indexOf(':');
 			var first = stripped[i].substring(0, firstIdx);
-			var rest = stripped[i].substr(firstIdx + 1).replace(/:/g, "");
+			var rest = stripped[i].substr(firstIdx + 1).replace(/:|'|´|"/g, "");
 			var glued = first + ':' + rest;
 			
 			console.log(first, rest, glued);

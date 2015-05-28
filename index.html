@@ -91,10 +91,6 @@
 			display: block;
 			width: 100%;
 			height: 25px;
-		}
-		
-		#urlfield
-		{
 			margin-top: 15px;
 			display: block;
 		}
@@ -102,9 +98,23 @@
 		#ajaxtosql
 		{
 			float: right;
-			width: 39%;
+			width: 80%;
             height: 50px;
-            margin: 12.5px 0px 0px 0px;
+            margin: 0px 0px 0px 0px;
+		}
+		
+		#flipajax
+		{ 
+			margin-top: calc(50px / 2 - 13px / 2);
+			margin-right: 5px;
+		}
+		
+		#ajax_wrapper
+		{
+			width: 39%;
+			float: right;
+			height: 50px;
+			margin: 12.5px 0px 0px 0px;
 		}
 		
 		#radio_wrapper
@@ -127,6 +137,7 @@
 
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="jq-j-modal.js"></script>
     <script src="mysql-transformer.js"></script>
     <script src="index.js"></script>
 </head>
@@ -138,7 +149,10 @@
 		<textarea id="ajaxarea" placeholder="Ajax call will be output here..."></textarea>	
         <textarea id="insertarea" placeholder="Insert query here..."></textarea>
 
-		<input type="button" id="ajaxtosql" value="AJAX -> SQL"></input>
+		<div id = "ajax_wrapper">
+			<input type="button" id="ajaxtosql" value="AJAX -> SQL"></input>
+			<input type = "checkbox" id = "flipajax" checked>Flip ajax?</input>
+		</div>
 		
         <div id="button_wrapper">
             <input type="button" id="inserttoupdate" value="INSERT -> UPDATE"></input>

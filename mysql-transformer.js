@@ -4,7 +4,7 @@ function MysqlTransformer()
 }
 
 //Update query to insert query transform
-MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxoutputselector, functionoutputselector, radiogroupselector, onerrorcallback)
+MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxoutputselector, functionoutputselector, radiogroupselector, ajaxflipped, onerrorcallback)
 {
     if (typeof sql === 'undefined' || sql.length < 20)
     {
@@ -86,7 +86,15 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxo
 		var column = splitSetlist.columns[i];
 		var value = splitSetlist.values[i];
 		
-		ajaxdatastring += '\t\t' + column + ': ' + value + '' + comma + '\n';
+        if(ajaxflipped)
+        {
+            ajaxdatastring += '\t\t' + value + ': ' + column + '' + comma + '\n';
+        }
+        else
+        {
+            ajaxdatastring += '\t\t' + column + ': ' + value + '' + comma + '\n';
+        }
+		
 		issetstring += '$_' + requesttype + '["' + column + '"]' + comma2;
 		bindstring += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", $' + column.replace(/'|`|"/g, '') + ');' + lb;
 		bindstring2 += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", $_' + requesttype + '["' + column.replace(/'|`|"/g, '') + '"]);' + lb;
@@ -107,7 +115,7 @@ MysqlTransformer.prototype.UpdateToInsert = function (sql, outputselector, ajaxo
 };
 
 //Insert query to update query transform
-MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxoutputselector, functionoutputselector, radiogroupselector, onerrorcallback)
+MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxoutputselector, functionoutputselector, radiogroupselector, ajaxflipped, onerrorcallback)
 {
     if (typeof sql === 'undefined' || sql.length < 20)
     {
@@ -172,7 +180,16 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxo
 		var lb = (i == columnList.length - 1) ? '' : '\n';
 
         transformed += '`' + column + '` = :' + value + comma + '\n';
-		ajaxdatastring += '\t\t' + column + ': ' + value + '' + comma + '\n';
+        
+        if(ajaxflipped)
+        {
+            ajaxdatastring += '\t\t' + value + ': ' + column + '' + comma + '\n';
+        }
+        else
+        {
+            ajaxdatastring += '\t\t' + column + ': ' + value + '' + comma + '\n';
+        }
+
 		issetstring += '$_' + requesttype + '["' + column + '"]' + comma2;
 		bindstring += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", $' + column.replace(/'|`|"/g, '') + ');' + lb;
 		bindstring2 += '$query->bindValue(":' + value.replace(/'|`|"/g, '') + '", $_' + requesttype + '["' + column.replace(/'|`|"/g, '') + '"]);' + lb;
@@ -196,7 +213,7 @@ MysqlTransformer.prototype.InsertToUpdate = function (sql, outputselector, ajaxo
 
 //Jquery-like ajax call to SQL transform
 MysqlTransformer.prototype.AjaxToSQL = function (ajaxstring, outputselector1, outputselector2, functionoutputselector, radiogroupselector, onerrorcallback)
-{
+{   
 	if (typeof ajaxstring === 'undefined' || ajaxstring.length < 10)
     {
         if (typeof onerrorcallback !== 'undefined')

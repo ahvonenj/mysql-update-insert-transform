@@ -6,7 +6,8 @@ $(document).ready(function ()
 
     $('#updatetoinsert').on('click', function ()
     {
-        transformer.UpdateToInsert($('#updatearea').val(), '#insertarea', '#ajaxarea', '#functionarea', '#radio_wrapper', function (errormsg)
+        console.log($('#flipajax').is(':checked'));
+        transformer.UpdateToInsert($('#updatearea').val(), '#insertarea', '#ajaxarea', '#functionarea', '#radio_wrapper', $('#flipajax').is(':checked'), function (errormsg)
         {
             alert(errormsg);
         });
@@ -16,7 +17,8 @@ $(document).ready(function ()
 
     $('#inserttoupdate').on('click', function ()
     {
-        transformer.InsertToUpdate($('#insertarea').val(), '#updatearea', '#ajaxarea', '#functionarea', '#radio_wrapper', function (errormsg)
+        console.log($('#flipajax').is(':checked'));
+        transformer.InsertToUpdate($('#insertarea').val(), '#updatearea', '#ajaxarea', '#functionarea', '#radio_wrapper', $('#flipajax').is(':checked'), function (errormsg)
         {
             alert(errormsg);
         });
@@ -38,6 +40,18 @@ $(document).ready(function ()
 	{
 		$(this).select();	
 	});
+    
+    var modal = new JModal(true, 200, 200, 1000, 800, '<h1>test</h1>');
+    
+    $(document).on('keypress', function(e)
+    {
+        switch(String.fromCharCode(e.which).toUpperCase())
+        {
+            case 'A':
+                modal.toggle();
+                break;
+        }
+    });
 	
 	var linkedquery = getParameterByName('query');
 	var linkedquerytype = getParameterByName('querytype');
